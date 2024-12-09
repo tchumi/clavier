@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import pandas as pd
+from PIL import Image, ImageTk
+
 
 debug = True
 MOTDEPASSE = "aze\r" if debug else ".tie5Roanl\r"
@@ -63,6 +65,15 @@ class KeyPressCaptureApp:
         self.menu = Menu(root)
         self.root.config(menu=self.menu)
 
+        # Charge l'image WebP avec Pillow
+        image_path = "visuel.webp"
+        image = Image.open(image_path)
+
+        # Convertit l'image pour Tkinter
+        self.photo = ImageTk.PhotoImage(image)
+        self.load_image()
+        
+
         # # Chronogramme Canvas (pour suppression et mise à jour)
         self.chronogram_canvas = None
 
@@ -94,6 +105,11 @@ class KeyPressCaptureApp:
         self.menu.add_command(label="Visu_code", command=self.show_code)
         self.menu.add_command(label="Aide", command=self.show_help)
         self.result_text = None
+
+    def load_image(self):
+        # Ajoute l'image à un Label
+        self.label = tk.Label(self.root, image=self.photo)
+        self.label.pack()
 
     def quit_application(self):
         """Quitter proprement l'application."""
@@ -350,11 +366,13 @@ class KeyPressCaptureApp:
         self.listener.stop()
         self.nettoyer_tkinter()
         self.capture_menu.entryconfig("Lancer Capture", state=tk.NORMAL)
+        self.load_image()
 
     def on_quitter_menu_demo(self):
         """Quitter proprement l'application."""
         self.nettoyer_tkinter()
         self.demo_menu.entryconfig("Lancer Démo", state=tk.NORMAL)
+        self.load_image()
 
     def on_validate(self):
         """Traite la saisie et affiche les résultats."""

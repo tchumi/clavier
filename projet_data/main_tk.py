@@ -9,7 +9,7 @@ import pandas as pd
 from PIL import Image, ImageTk
 
 
-debug = True
+debug = False
 MOTDEPASSE = "aze\r" if debug else ".tie5Roanl\r"
 ESSAIS = 2 if debug else 10
 SUBJECTS = "MMM"
@@ -229,6 +229,9 @@ class KeyPressCaptureApp:
                 text=f"Tentatives restantes : {self.max_attempts - self.attempts}"
             )
             if self.attempts >= self.max_attempts:
+                # exporter les données
+                df=pd.DataFrame(self.data)
+                df.to_csv('keyboard_capture.csv',index=False)
                 # Afficher un sablier avec un message
                 hourglass_frame = tk.Frame(self.root)
                 hourglass_frame.pack(pady=20)
@@ -306,7 +309,12 @@ class KeyPressCaptureApp:
             liste.append(hold_times[i])
 
         self.data.append(liste)
+        print(self.data)
         print(liste)
+        df=pd.DataFrame(self.data)
+        print('\n')
+        print("Dataframe")
+        print(df.head())
         # TODO prépare dataframe pour l'analyse
         # df = pd.DataFrame(data)
         # print(df)
